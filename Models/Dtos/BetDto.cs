@@ -14,7 +14,6 @@ namespace RouletteBetsApi.Models.Dtos
         [BsonRepresentation(MongoDB.Bson.BsonType.ObjectId)]
         [Required(ErrorMessage = "'rouletteId' field is required")]
         public string rouletteId { get; set; }
-        public string userId { get; set; }
-        public string state { get; set; }
+       
     }
 }

@@ -22,14 +22,6 @@ namespace RouletteBetsApi.Models.Profiles
                 .ForMember(
                     dest => dest.color,
                     opt => opt.MapFrom(src => $"{src.color}")
-                )
-                .ForMember(
-                    dest => dest.state,
-                    opt => opt.MapFrom(src => $"{src.state}")
-                )
-                .ForMember(
-                    dest => dest.userId,
-                    opt => opt.MapFrom(src => $"{src.userId}")
                 );
         }
     }

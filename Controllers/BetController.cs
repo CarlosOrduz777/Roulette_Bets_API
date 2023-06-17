@@ -4,6 +4,7 @@ using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Repositories;
 using RouletteBetsApi.Services;
+using System.Collections;
 
 namespace RouletteBetsApi.Controllers
 {
@@ -28,14 +29,15 @@ namespace RouletteBetsApi.Controllers
         {
             try
             {
+                Bet bet = _mapper.Map<Bet>(betDto);
                 if (!isAuthorized())
                     return Unauthorized("Yo have to be Authorized to do this action");
-                if (!ModelState.IsValid || !gameService.IsValid(betDto) || !await gameService.IsRouletteAvailable(betDto, this._rouletteService))
+                if (!ModelState.IsValid || !gameService.IsValid(betDto) || !await gameService.IsRouletteAvailable(bet, this._rouletteService))
                     return BadRequest("Invalid Model Object");
-
-                betDto.state = "PLAYING";
-                betDto.userId = Request.Headers["Authorization"];
-                Bet bet = _mapper.Map<Bet>(betDto);
+                
+                bet.state = "PLAYING";
+                bet.userId = Request.Headers["Authorization"];
+                
                 return await _betService.Create(bet);
             }
             catch (Exception ex)
@@ -47,10 +49,19 @@ namespace RouletteBetsApi.Controllers
         public async Task<ActionResult<IEnumerable<Bet>>> Close([FromQuery] string rouletteId)
         {
             var bets = await _betService.GetByRouletteId(rouletteId);
+            Console.WriteLine(bets.Count());
             await _rouletteService.UpdateState(rouletteId, "CLOSED");
-            gameService.calculateWinners(bets);
-            bets.ForEach(x => _betService.Update(x));
-            return bets;
+            bets = gameService.CalculateWinners(bets);
+            Console.WriteLine(bets.Count());
+            List<Bet> betListUpdated = new(bets); ;
+            bets.ForEach(async x => {
+                _betService.Update(x);
+            });
+            bets.ForEach(async b =>
+            {
+                await _betService.Delete(b._id);
+            });
+            return betListUpdated;
         }
 
         private bool isAuthorized()

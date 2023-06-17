@@ -21,9 +21,15 @@ namespace RouletteBetsApi.Repositories
             return bet;
         }
 
+        public async Task Delete(String betId)
+        {
+            FilterDefinition<Bet> filter = Builders<Bet>.Filter.Eq("_id", betId);
+            await _bets.DeleteOneAsync(filter);
+        }
+
         public async Task<List<Bet>> GetByRouletteId(string rouletteId)
         {
-            return await _bets.Find(b => b._id == rouletteId).ToListAsync();
+            return await _bets.Find<Bet>(b => b.rouletteId == rouletteId).ToListAsync();
             
         }
 
