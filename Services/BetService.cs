@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using RouletteBetsApi.Configurations;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Services.Interfaces;

@@ -5,6 +5,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using RouletteBetsApi.Services;
+using AutoMapper;
+using RouletteBetsApi.Models.Dtos;
 
 namespace RouletteBetsApi.Controllers
 {
@@ -14,19 +16,21 @@ namespace RouletteBetsApi.Controllers
     {
         public IConfiguration _configuration;
         private readonly UserService _users;
+        public readonly IMapper _mapper;
 
-        public TokenController(IConfiguration config, UserService users)
+        public TokenController(IConfiguration config, UserService users, IMapper mapper)
         {
             _configuration = config;
             _users = users;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(User _userData)
+        public async Task<IActionResult> Post(UserDto _userData)
         {
             if (_userData != null && _userData.Email != null && _userData.Password != null)
             {
-                var user = await GetUser(_userData.Email, _userData.Password);
+                var user = _mapper.Map<User>(await GetUser(_userData.Email, _userData.Password));
 
                 if (user != null)
                 {

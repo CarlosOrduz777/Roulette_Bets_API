@@ -1,6 +1,8 @@
 ﻿namespace RouletteBetsApi.Exceptions
 {
-    public class KeyNotFoundException
+    public class KeyNotFoundException:Exception
     {
+        public KeyNotFoundException(string message) : base(message)
+        { }
     }
 }

@@ -1,24 +1,41 @@
 
 using MongoDB.Driver.Core.Configuration;
 using MongoDB.Driver;
-using RouletteBetsApi.Models;
 using RouletteBetsApi.Repositories;
-using System.Collections;
-using System.Xml.Linq;
 using RouletteBetsApi.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using RouletteBetsApi.Configurations;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
-
-
 
 builder.Services.Configure<RouletteBetsDBSettings>(builder.Configuration.GetSection("RouletteBetsDBSettings"));
 builder.Services.AddSingleton<BetService>();
 builder.Services.AddSingleton<RouletteService>();
 builder.Services.AddSingleton<UserService>();
-
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Version = "v1",
+        Title = "Roulette Bets API",
+        Description = "An ASP.NET Core Web API for managing Roulette Bets Game",
+        TermsOfService = new Uri("https://example.com/terms"),
+        Contact = new OpenApiContact
+        {
+            Name = "Example Contact",
+            Url = new Uri("https://example.com/contact")
+        },
+        License = new OpenApiLicense
+        {
+            Name = "Example License",
+            Url = new Uri("https://example.com/license")
+        }
+    });
+});
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -28,7 +45,6 @@ builder.Services.AddSwaggerGen();
 // AutoMapper for dtos
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddControllersWithViews();
-
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -51,6 +67,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+app.AddGlobalErrorHandler();
 
 app.UseHttpsRedirection();
 

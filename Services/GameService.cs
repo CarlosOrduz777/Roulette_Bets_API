@@ -2,6 +2,7 @@
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Repositories;
+using RouletteBetsApi.Services.Interfaces;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -39,7 +40,7 @@ namespace RouletteBetsApi.Services
             else
                 return "black";
         }
-        public async Task<bool> IsRouletteAvailable(Bet bet, RouletteService rouletteService)
+        public async Task<bool> IsRouletteAvailable(Bet bet, IRouletteService rouletteService)
         {
             
             Roulette roulette = await rouletteService.GetRouletteById(bet.rouletteId);

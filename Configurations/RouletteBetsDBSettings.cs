@@ -1,4 +1,4 @@
-﻿namespace RouletteBetsApi.Models
+﻿namespace RouletteBetsApi.Configurations
 {
     public class RouletteBetsDBSettings
     {
