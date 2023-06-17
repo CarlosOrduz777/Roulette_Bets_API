@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using RouletteBetsApi.Models;
+using RouletteBetsApi.Models.Dtos;
 
 namespace RouletteBetsApi.Repositories
 {

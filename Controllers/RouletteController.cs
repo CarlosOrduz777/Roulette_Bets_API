@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using RouletteBetsApi.Models;
+using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Repositories;
 
 namespace RouletteBetsApi.Controllers
@@ -9,9 +11,11 @@ namespace RouletteBetsApi.Controllers
     public class RouletteController : ControllerBase
     {
         private readonly RouletteService _rouletteService;
-        public RouletteController(RouletteService rouletteService) 
+        public readonly IMapper _mapper;
+        public RouletteController(RouletteService rouletteService, IMapper mapper) 
         { 
             _rouletteService = rouletteService;
+            _mapper = mapper;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Roulette>> GetRouletteById(string id)
@@ -20,8 +24,9 @@ namespace RouletteBetsApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<string>> Create(Roulette roulette)
+        public async Task<ActionResult<string>> Create(RouletteDto rouletteDto)
         {
+            Roulette roulette = _mapper.Map<Roulette>(rouletteDto);
             return await _rouletteService.Create(roulette);
         }
         [HttpPatch("{id}")]

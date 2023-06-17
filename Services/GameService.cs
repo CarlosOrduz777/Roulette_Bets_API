@@ -1,5 +1,6 @@
 ﻿using Amazon.Runtime.Internal;
 using RouletteBetsApi.Models;
+using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Repositories;
 using System.Drawing;
 using System.Runtime.CompilerServices;
@@ -37,16 +38,16 @@ namespace RouletteBetsApi.Services
             else
                 return "negro";
         }
-        public async Task<bool> IsRouletteAvailable(Bet bet, RouletteService rouletteService)
+        public async Task<bool> IsRouletteAvailable(BetDto betDto, RouletteService rouletteService)
         {
             
-            Roulette roulette = await rouletteService.GetRouletteById(bet.rouletteId);
+            Roulette roulette = await rouletteService.GetRouletteById(betDto.rouletteId);
             return roulette.state.Equals("OPEN");
             
         }
-        public bool IsValid(Bet bet)
+        public bool IsValid(BetDto betDto)
         {
-                return (IsColorValid(bet.color) || bet.number > 0);
+                return (IsColorValid(betDto.color) || betDto.number > 0);
         }
         public bool IsColorValid(string color)
         {

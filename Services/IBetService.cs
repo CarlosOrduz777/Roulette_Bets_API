@@ -1,4 +1,5 @@
 ﻿using RouletteBetsApi.Models;
+using RouletteBetsApi.Models.Dtos;
 
 namespace RouletteBetsApi.Repositories
 {

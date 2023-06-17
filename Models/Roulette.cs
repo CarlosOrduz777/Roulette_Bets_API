@@ -9,9 +9,7 @@ namespace RouletteBetsApi.Models
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string? _id {  get; set; }
-        [Required(ErrorMessage ="'name' field is required")]
         public string name { get; set; }
-        [Required(ErrorMessage ="'state' field is required")]
         public string state { get; set; } 
     }
 }

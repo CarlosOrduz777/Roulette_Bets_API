@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using RouletteBetsApi.Models;
+using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Repositories;
 using RouletteBetsApi.Services;
 
@@ -13,28 +14,28 @@ namespace RouletteBetsApi.Controllers
         private GameService gameService;
         private readonly BetService _betService;
         private readonly RouletteService _rouletteService;
-        public IUnitOfWork _unitOfWork;
-        // define the mapper
         public readonly IMapper _mapper;
-        public BetController(BetService betService, RouletteService rouletteService)
+        public BetController(BetService betService, RouletteService rouletteService, IMapper mapper)
         {
             _rouletteService = rouletteService;
             _betService = betService;
+            _mapper = mapper;
             gameService = new GameService();
         }
+        
         [HttpPost]
-        public async Task<ActionResult<Bet>> Create(Bet bet)
+        public async Task<ActionResult<Bet>> Create(BetDto betDto)
         {
             try
             {
                 if (!isAuthorized())
                     return Unauthorized("Yo have to be Authorized to do this action");
-                if (!ModelState.IsValid || !gameService.IsValid(bet) || !await gameService.IsRouletteAvailable(bet, this._rouletteService))
+                if (!ModelState.IsValid || !gameService.IsValid(betDto) || !await gameService.IsRouletteAvailable(betDto, this._rouletteService))
                     return BadRequest("Invalid Model Object");
 
-                bet.state = "PLAYING";
-                bet.userId = Request.Headers["Authorization"];
-
+                betDto.state = "PLAYING";
+                betDto.userId = Request.Headers["Authorization"];
+                Bet bet = _mapper.Map<Bet>(betDto);
                 return await _betService.Create(bet);
             }
             catch (Exception ex)
