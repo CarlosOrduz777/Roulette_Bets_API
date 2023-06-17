@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Repositories;
 using RouletteBetsApi.Services;
@@ -12,6 +13,9 @@ namespace RouletteBetsApi.Controllers
         private GameService gameService;
         private readonly BetService _betService;
         private readonly RouletteService _rouletteService;
+        public IUnitOfWork _unitOfWork;
+        // define the mapper
+        public readonly IMapper _mapper;
         public BetController(BetService betService, RouletteService rouletteService)
         {
             _rouletteService = rouletteService;
@@ -21,20 +25,22 @@ namespace RouletteBetsApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Bet>> Create(Bet bet)
         {
-
-            if (!isAuthorized())
-                return Unauthorized();
-            Console.WriteLine(gameService.IsValid(bet));
-            Console.WriteLine(gameService.IsRouletteAvailable(bet, this._rouletteService));
-            if (!ModelState.IsValid || !gameService.IsValid(bet) || ! await gameService.IsRouletteAvailable(bet, this._rouletteService))
+            try
             {
-                return BadRequest();
-            }
-                
-            bet.state = "PLAYING";
-            bet.userId = Request.Headers["Authorization"];
+                if (!isAuthorized())
+                    return Unauthorized("Yo have to be Authorized to do this action");
+                if (!ModelState.IsValid || !gameService.IsValid(bet) || !await gameService.IsRouletteAvailable(bet, this._rouletteService))
+                    return BadRequest("Invalid Model Object");
 
-            return await _betService.Create(bet);
+                bet.state = "PLAYING";
+                bet.userId = Request.Headers["Authorization"];
+
+                return await _betService.Create(bet);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal server error");
+            }
         }
         [HttpPut]
         public async Task<ActionResult<IEnumerable<Bet>>> Close([FromQuery] string rouletteId)

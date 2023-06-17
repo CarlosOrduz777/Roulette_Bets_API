@@ -12,7 +12,7 @@ namespace RouletteBetsApi.Repositories
         {
             var mongoClient = new MongoClient(options.Value.ConnectionURI);
             _roulettes = mongoClient.GetDatabase(options.Value.DatabaseName)
-                .GetCollection<Roulette>(options.Value.CollectionName);
+                .GetCollection<Roulette>(options.Value.RoulettesCollectionName);
         }
 
         public async Task<string> Create(Roulette roulette)

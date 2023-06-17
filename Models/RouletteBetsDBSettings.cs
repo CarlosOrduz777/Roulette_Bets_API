@@ -2,8 +2,10 @@
 {
     public class RouletteBetsDBSettings
     {
-        public string ConnectionURI { get; set; } = null!;
-        public string DatabaseName { get; set; } = null!;
-        public string CollectionName { get; set; } = null!;
+        public string ConnectionURI { get; set; }
+        public string DatabaseName { get; set; }
+        public string RoulettesCollectionName { get; set; }
+
+        public string BetsCollectionName { get; set; }
     }
 }
