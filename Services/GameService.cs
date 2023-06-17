@@ -15,7 +15,6 @@ namespace RouletteBetsApi.Services
         {
             int numberWinner = new Random().Next(1, 36);
             string colorWinner = CalculateColorWinner(numberWinner);
-            Console.WriteLine(colorWinner);
             foreach (Bet bet in bets)
             {
                 if (bet.number == numberWinner)

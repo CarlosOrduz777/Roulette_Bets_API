@@ -1,13 +1,13 @@
 ﻿using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
 
-namespace RouletteBetsApi.Repositories
+namespace RouletteBetsApi.Services.Interfaces
 {
     public interface IBetService
     {
         Task<Bet> Create(Bet bet);
         Task<List<Bet>> GetByRouletteId(string rouletteId);
         void Update(Bet bet);
-        Task Delete(String betId);
+        Task Delete(string betId);
     }
 }

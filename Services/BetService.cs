@@ -2,6 +2,7 @@
 using MongoDB.Driver;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
+using RouletteBetsApi.Services.Interfaces;
 
 namespace RouletteBetsApi.Repositories
 {

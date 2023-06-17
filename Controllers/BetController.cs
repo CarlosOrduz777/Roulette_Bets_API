@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
@@ -8,6 +9,7 @@ using System.Collections;
 
 namespace RouletteBetsApi.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("/api/v1")]
     public class BetController: ControllerBase
@@ -23,7 +25,6 @@ namespace RouletteBetsApi.Controllers
             _mapper = mapper;
             gameService = new GameService();
         }
-        
         [HttpPost]
         public async Task<ActionResult<Bet>> Create(BetDto betDto)
         {
@@ -46,13 +47,11 @@ namespace RouletteBetsApi.Controllers
             }
         }
         [HttpPut]
-        public async Task<ActionResult<IEnumerable<Bet>>> Close([FromQuery] string rouletteId)
+        public async Task<ActionResult<IEnumerable<Bet>>> Close([FromQuery]string rouletteId)
         {
             var bets = await _betService.GetByRouletteId(rouletteId);
-            Console.WriteLine(bets.Count());
             await _rouletteService.UpdateState(rouletteId, "CLOSED");
             bets = gameService.CalculateWinners(bets);
-            Console.WriteLine(bets.Count());
             List<Bet> betListUpdated = new(bets); ;
             bets.ForEach(async x => {
                 _betService.Update(x);

@@ -1,6 +1,6 @@
 ﻿using RouletteBetsApi.Models;
 
-namespace RouletteBetsApi.Repositories
+namespace RouletteBetsApi.Services.Interfaces
 {
     public interface IRouletteService
     {
