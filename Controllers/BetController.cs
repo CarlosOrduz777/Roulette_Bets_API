@@ -1,13 +1,15 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using RouletteBetsApi.Exceptions;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Repositories;
+using RouletteBetsApi.Repositories.Interfaces;
 using RouletteBetsApi.Services;
-using RouletteBetsApi.Services.Interfaces;
 using System.Collections;
+using System.Net.Http.Headers;
 
 namespace RouletteBetsApi.Controllers
 {
@@ -17,34 +19,35 @@ namespace RouletteBetsApi.Controllers
     public class BetController: ControllerBase
     {
         private GameService gameService;
-        private readonly IBetService _betService;
-        private readonly IRouletteService _rouletteService;
+        private readonly BetService _betService;
+        private readonly RouletteService _rouletteService;
         public readonly IMapper _mapper;
-        
-        public BetController(BetService betService, RouletteService rouletteService, IMapper mapper)
+        private IDistributedCache _cache;
+
+
+        public BetController(BetService betService, RouletteService rouletteService, IMapper mapper,IDistributedCache cache)
         {
             _rouletteService = rouletteService;
             _betService = betService;
             _mapper = mapper;
             gameService = new GameService();
+            _cache = cache;
         }
-        /// <summary>
-        /// Creates a Bet
-        /// </summary>
         [HttpPost]
         public async Task<ActionResult<Bet>> Create(BetDto betDto)
         {
-            Console.WriteLine(betDto.color.ToLower().Equals("red"));
             if (!(betDto.color.ToLower().Equals("red") || betDto.color.ToLower().Equals("black")))
                 throw new BadRequestException("'color' field has to be 'red' or 'black'");
             Bet bet = _mapper.Map<Bet>(betDto);
             if (!isAuthorized())
                 throw new NotauthorizedAccessException("You don't have authorization please log in");
-            if (!ModelState.IsValid || !gameService.IsValid(betDto) || !await gameService.IsRouletteAvailable(bet, this._rouletteService))
+            if (!ModelState.IsValid || !gameService.IsBetValid(betDto) || !await gameService.IsRouletteAvailable(bet, this._rouletteService))
                 throw new BadHttpRequestException("Model Object invalid");
             bet.state = "PLAYING";
-            bet.userId = Request.Headers["Authorization"];
-            return await _betService.Create(bet);
+            var userId = User.Claims.FirstOrDefault(x => x.Type == "_id")?.Value;
+            bet.userId = userId;
+            Bet createdBet = await _betService.Create(bet);
+            return createdBet;
         }
         [HttpPut]
         public async Task<ActionResult<IEnumerable<Bet>>> Close([FromQuery]string rouletteId)

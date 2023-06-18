@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
 using RouletteBetsApi.Exceptions;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
-using RouletteBetsApi.Repositories;
+using RouletteBetsApi.Services;
 
 namespace RouletteBetsApi.Controllers
 {
@@ -13,17 +15,26 @@ namespace RouletteBetsApi.Controllers
     {
         private readonly RouletteService _rouletteService;
         public readonly IMapper _mapper;
-        public RouletteController(RouletteService rouletteService, IMapper mapper) 
+        private IDistributedCache _cache;
+        public RouletteController(RouletteService rouletteService, IMapper mapper,IDistributedCache cache) 
         { 
             _rouletteService = rouletteService;
             _mapper = mapper;
+            _cache = cache;
         }
         [HttpGet("{id}")]
         public async Task<ActionResult<Roulette>> GetRouletteById(string id)
         {
-            return await _rouletteService.GetRouletteById(id);
+            string recordKey = "Roulette_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
+            var roulette = await _cache.GetValueAsync<Roulette>(recordKey);
+            if(roulette is null )
+            {
+                roulette = await _rouletteService.GetRouletteById(id);
+                await _cache.SetValueAsync(recordKey, roulette);
+            }
+            return Ok(roulette);
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<ActionResult<string>> Create(RouletteDto rouletteDto)
         {
@@ -34,16 +45,24 @@ namespace RouletteBetsApi.Controllers
             Roulette roulette = _mapper.Map<Roulette>(rouletteDto);
             return await _rouletteService.Create(roulette);
         }
+        [Authorize]
         [HttpPatch("{id}")]
         public async Task<ActionResult> Open(string id)
         {
                 await _rouletteService.UpdateState(id, "OPEN");
-                return NoContent();
+                return Ok("Roulette: "+id+ " OPEN");
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Roulette>>> GetAll()
         {
-            return await _rouletteService.GetAll();
+            string recordKey = "Roulettes_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
+            var roulettes = await _cache.GetValueAsync<List<Roulette>>(recordKey);
+            if(roulettes == null)
+            {
+                roulettes = await _rouletteService.GetAll();
+                await _cache.SetValueAsync(recordKey, roulettes);
+            }
+            return Ok(roulettes);
         }
 
     }

@@ -1,8 +1,8 @@
 ﻿using RouletteBetsApi.Models;
 
-namespace RouletteBetsApi.Services.Interfaces
+namespace RouletteBetsApi.Repositories.Interfaces
 {
-    public interface IRouletteService
+    public interface IRouletteRepository
     {
         Task<string> Create(Roulette roulette);
         Task UpdateState(string rouletteId, string state);

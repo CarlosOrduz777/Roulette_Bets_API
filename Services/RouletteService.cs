@@ -2,48 +2,38 @@
 using MongoDB.Driver;
 using RouletteBetsApi.Configurations;
 using RouletteBetsApi.Models;
-using RouletteBetsApi.Services.Interfaces;
+using RouletteBetsApi.Repositories;
+using RouletteBetsApi.Repositories.Interfaces;
 
-namespace RouletteBetsApi.Repositories
+namespace RouletteBetsApi.Services
 {
-    public class RouletteService : IRouletteService
+    public class RouletteService
     {
-        private readonly IMongoCollection<Roulette> _roulettes;
+        private readonly IRouletteRepository _roulettes;
 
-        public RouletteService(IOptions<RouletteBetsDBSettings> options)
+        public RouletteService(RouletteRepository roulettes)
         {
-            var mongoClient = new MongoClient(options.Value.ConnectionURI);
-            _roulettes = mongoClient.GetDatabase(options.Value.DatabaseName)
-                .GetCollection<Roulette>(options.Value.RoulettesCollectionName);
+            _roulettes = roulettes;
         }
 
         public async Task<string> Create(Roulette roulette)
         {
-            if(roulette == null) { }
-            else if(!roulette.state.Equals("CLOSE") || !roulette.state.Equals("OPEN"))
-            {
-
-            }
-            await _roulettes.InsertOneAsync(roulette);
-            return roulette._id;
+            return await _roulettes.Create(roulette);
         }
 
         public async Task<List<Roulette>> GetAll()
         {
-            return await _roulettes.Find(r => true).ToListAsync();
+            return await _roulettes.GetAll();
         }
 
         public async Task<Roulette> GetRouletteById(string rouletteId)
         {
-            return await _roulettes.Find(r=> r._id == rouletteId).FirstOrDefaultAsync();
+            return await _roulettes.GetRouletteById(rouletteId);
         }
 
         public async Task UpdateState(string rouletteId, string state)
         {
-            
-            var idFilter = Builders<Roulette>.Filter.Eq("_id", rouletteId);
-            var toUpdate = Builders<Roulette>.Update.Set("state", state);
-            await _roulettes.UpdateOneAsync(idFilter, toUpdate);
+           await _roulettes.UpdateState(rouletteId, state);
         }
     }
 }

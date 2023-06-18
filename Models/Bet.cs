@@ -14,6 +14,7 @@ namespace RouletteBetsApi.Models
         public decimal quantity { get; set; }
         public string rouletteId { get; set; }
         public decimal earnedQuantity { get; set; }
+        [Required(ErrorMessage ="The field 'userId' is required, please login")]
         public string userId { get; set; }
         public string state { get; set; }
     }

@@ -1,8 +1,8 @@
 ﻿using RouletteBetsApi.Models;
 
-namespace RouletteBetsApi.Services.Interfaces
+namespace RouletteBetsApi.Repositories.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
         Task<User> Create(User user);
         Task<User> GetUser(string email, string password);

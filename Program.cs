@@ -13,9 +13,18 @@ using System.Reflection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<RouletteBetsDBSettings>(builder.Configuration.GetSection("RouletteBetsDBSettings"));
+builder.Services.AddSingleton<BetRepository>();
+builder.Services.AddSingleton<RouletteRepository>();
+builder.Services.AddSingleton<UserRepository>();
 builder.Services.AddSingleton<BetService>();
 builder.Services.AddSingleton<RouletteService>();
 builder.Services.AddSingleton<UserService>();
+//Redis Cache
+builder.Services.AddStackExchangeRedisCache(options => {
+    options.Configuration = builder.Configuration.GetConnectionString("Redis");
+    options.InstanceName = "redis";
+});
+builder.Services.AddRazorPages();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo
@@ -37,7 +46,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -68,11 +76,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 app.AddGlobalErrorHandler();
-
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
+app.UseStaticFiles();
 app.MapControllers();
-
+app.MapRazorPages();
 app.Run();
+

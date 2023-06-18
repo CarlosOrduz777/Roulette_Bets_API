@@ -2,7 +2,7 @@
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Repositories;
-using RouletteBetsApi.Services.Interfaces;
+using RouletteBetsApi.Repositories.Interfaces;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -14,6 +14,7 @@ namespace RouletteBetsApi.Services
         
         public List<Bet> CalculateWinners(List<Bet> bets)
         {
+            //Calculate winner number and color of the roulette
             int numberWinner = new Random().Next(1, 36);
             string colorWinner = CalculateColorWinner(numberWinner);
             foreach (Bet bet in bets)
@@ -40,23 +41,19 @@ namespace RouletteBetsApi.Services
             else
                 return "black";
         }
-        public async Task<bool> IsRouletteAvailable(Bet bet, IRouletteService rouletteService)
+        public async Task<bool> IsRouletteAvailable(Bet bet, RouletteService rouletteService)
         {
-            
             Roulette roulette = await rouletteService.GetRouletteById(bet.rouletteId);
             return roulette.state.Equals("OPEN");
-            
         }
-        public bool IsValid(BetDto betDto)
+        public bool IsBetValid(BetDto betDto)
         {
-                return (IsColorValid(betDto.color) || betDto.number > 0);
+                return (IsColorValid(betDto.color) || betDto.number >= 0);
         }
         public bool IsColorValid(string color)
         {
             switch (color)
             {
-                case "rojo":
-                case "negro":
                 case "red":
                 case "black":
                     return true;

@@ -53,7 +53,6 @@ namespace RouletteBetsApi.Controllers
                         claims,
                         expires: DateTime.UtcNow.AddMinutes(10),
                         signingCredentials: signIn);
-
                     return Ok(new JwtSecurityTokenHandler().WriteToken(token));
                 }
                 else

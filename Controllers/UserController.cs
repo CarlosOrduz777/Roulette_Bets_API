@@ -3,9 +3,9 @@ using RouletteBetsApi.Models.Dtos;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Repositories;
 using RouletteBetsApi.Services;
-using RouletteBetsApi.Services.Interfaces;
 using System.Runtime.CompilerServices;
 using AutoMapper;
+using RouletteBetsApi.Repositories.Interfaces;
 
 namespace RouletteBetsApi.Controllers
 {
@@ -13,7 +13,7 @@ namespace RouletteBetsApi.Controllers
     [Route("api/v1/users")]
     public class UserController:ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly UserService _userService;
         public readonly IMapper _mapper;
 
         public UserController (UserService userService,IMapper mapper)

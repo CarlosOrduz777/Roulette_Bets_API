@@ -3,41 +3,37 @@ using MongoDB.Driver;
 using RouletteBetsApi.Configurations;
 using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
-using RouletteBetsApi.Services.Interfaces;
+using RouletteBetsApi.Repositories.Interfaces;
 
 namespace RouletteBetsApi.Repositories
 {
-    public class BetService : IBetService
+    public class BetService
     {
-        private readonly IMongoCollection<Bet> _bets;
+        private readonly IBetRepository _bets;
 
-        public BetService(IOptions<RouletteBetsDBSettings> options)
+        public BetService(BetRepository bets)
         {
-            var mongoClient = new MongoClient(options.Value.ConnectionURI);
-            _bets = mongoClient.GetDatabase(options.Value.DatabaseName)
-                .GetCollection<Bet>(options.Value.BetsCollectionName);
+            _bets = bets;
         }
         public async Task<Bet> Create(Bet bet)
         {
-            await _bets.InsertOneAsync(bet);
-            return bet;
+            return await _bets.Create(bet);
         }
 
         public async Task Delete(String betId)
         {
-            FilterDefinition<Bet> filter = Builders<Bet>.Filter.Eq("_id", betId);
-            await _bets.DeleteOneAsync(filter);
+            await _bets.Delete(betId);
         }
 
         public async Task<List<Bet>> GetByRouletteId(string rouletteId)
         {
-            return await _bets.Find<Bet>(b => b.rouletteId == rouletteId).ToListAsync();
+            return await _bets.GetByRouletteId(rouletteId);
             
         }
 
-        public async void Update(Bet bet)
+        public void Update(Bet bet)
         {
-            await _bets.ReplaceOneAsync(b => b._id == bet._id, bet);
+            _bets.Update(bet);
         }
     }
 }
