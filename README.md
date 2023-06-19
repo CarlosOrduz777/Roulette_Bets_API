@@ -16,7 +16,7 @@ Este proyecto se trata de un juego de Ruleta, donde se exponen diferentes endpoi
 ### Endpoint Token Bearer
 * POST -> Crea y devuelve un token para poder Loguearse, dado un usuario específico
 ### :bulb: Diagrama de Componentes
-
+![imagen](https://github.com/CarlosOrduz777/Roulette_Bets_API/blob/main/Images/RouletteBetsComponentsDiagram.drawio.png)
 
 ### 🎯 Atributos de Calidad
 |Atributo|Fuente|Estimulo|Ambiente|Respuesta|Medida de respuesta|
