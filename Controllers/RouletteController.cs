@@ -10,7 +10,7 @@ using RouletteBetsApi.Services;
 namespace RouletteBetsApi.Controllers
 {
     [ApiController]
-    [Route("api/v1/roulettes")]
+    [Route("v1/roulettes")]
     public class RouletteController : ControllerBase
     {
         private readonly RouletteService _rouletteService;
@@ -25,7 +25,7 @@ namespace RouletteBetsApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Roulette>> GetRouletteById(string id)
         {
-            string recordKey = "Roulette_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
+            string recordKey = "Roulette_" + DateTime.UtcNow.ToString();
             var roulette = await _cache.GetValueAsync<Roulette>(recordKey);
             if(roulette is null )
             {
@@ -43,7 +43,8 @@ namespace RouletteBetsApi.Controllers
             else if (!(rouletteDto.state.ToUpper().Equals("OPEN") || rouletteDto.state.ToUpper().Equals("CLOSE")))
                 throw new BadRequestException("The state field has to be 'OPEN' or 'CLOSE'");
             Roulette roulette = _mapper.Map<Roulette>(rouletteDto);
-            return await _rouletteService.Create(roulette);
+            string rouletteIdCreated = await _rouletteService.Create(roulette);
+            return Ok("Roulette: " + rouletteIdCreated + "created");
         }
         [Authorize]
         [HttpPatch("{id}")]
@@ -55,7 +56,7 @@ namespace RouletteBetsApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Roulette>>> GetAll()
         {
-            string recordKey = "Roulettes_" + DateTime.Now.ToString("yyyyMMdd_hhmm");
+            string recordKey = "Roulettes_" + DateTime.UtcNow.ToString();
             var roulettes = await _cache.GetValueAsync<List<Roulette>>(recordKey);
             if(roulettes == null)
             {

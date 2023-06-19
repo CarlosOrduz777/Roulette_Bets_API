@@ -15,7 +15,7 @@ namespace RouletteBetsApi.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("/api/v1/bets")]
+    [Route("v1/bets")]
     public class BetController: ControllerBase
     {
         private GameService gameService;

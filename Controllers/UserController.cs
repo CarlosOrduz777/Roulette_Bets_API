@@ -10,7 +10,7 @@ using RouletteBetsApi.Repositories.Interfaces;
 namespace RouletteBetsApi.Controllers
 {
     [ApiController]
-    [Route("api/v1/users")]
+    [Route("v1/users")]
     public class UserController:ControllerBase
     {
         private readonly UserService _userService;
