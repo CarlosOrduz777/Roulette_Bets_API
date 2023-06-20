@@ -31,7 +31,6 @@ namespace RouletteBetsApi.Controllers
             if (_userData != null && _userData.Email != null && _userData.Password != null)
             {
                 var user = _mapper.Map<User>(await GetUser(_userData.Email, _userData.Password));
-
                 if (user != null)
                 {
                     //create claims details based on the user information
@@ -44,7 +43,6 @@ namespace RouletteBetsApi.Controllers
                         new Claim("UserName", user.UserName),
                         new Claim("Email", user.Email)
                     };
-
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
                     var signIn = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                     var token = new JwtSecurityToken(

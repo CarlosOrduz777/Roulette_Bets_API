@@ -22,16 +22,14 @@ namespace RouletteBetsApi.Controllers
         private readonly BetService _betService;
         private readonly RouletteService _rouletteService;
         public readonly IMapper _mapper;
-        private IDistributedCache _cache;
 
 
-        public BetController(BetService betService, RouletteService rouletteService, IMapper mapper,IDistributedCache cache)
+        public BetController(BetService betService, RouletteService rouletteService, IMapper mapper)
         {
             _rouletteService = rouletteService;
             _betService = betService;
             _mapper = mapper;
             gameService = new GameService();
-            _cache = cache;
         }
         [HttpPost]
         [Authorize]
