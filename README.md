@@ -5,7 +5,7 @@ Este proyecto se trata de un juego de Ruleta, donde se exponen diferentes endpoi
 
 ### Endpoints Roulette
 * POST -> Crea una nueva Ruleta
-* PATCH -> Cambia el estado de una Ruleta (OPEN-CLOSE, CLOSE-OPEN)
+* PATCH -> Cambia el estado de una Ruleta (CLOSE-OPEN)
 * GET -> Obtiene todas las ruletas existentes
 * GET{id} -> Retorna una ruleta dado un id
 ### Endpoints Bet
@@ -16,7 +16,7 @@ Este proyecto se trata de un juego de Ruleta, donde se exponen diferentes endpoi
 ### Endpoint Token Bearer
 * POST -> Crea y devuelve un token para poder Loguearse, dado un usuario específico
 ### :bulb: Diagrama de Componentes
-![imagen](https://github.com/CarlosOrduz777/Roulette_Bets_API/blob/main/Images/RouletteBetsComponentsDiagram.drawio.png)
+![imagen](https://github.com/CarlosOrduz777/Roulette_Bets_API/blob/main/Images/RouletteBetsComponentsDiagram.drawio(1).png)
 
 ### 🎯 Atributos de Calidad
 |Atributo|Fuente|Estimulo|Ambiente|Respuesta|Medida de respuesta|
