@@ -1,11 +1,6 @@
-﻿using Amazon.Runtime.Internal;
-using RouletteBetsApi.Models;
+﻿using RouletteBetsApi.Models;
 using RouletteBetsApi.Models.Dtos;
-using RouletteBetsApi.Repositories;
-using RouletteBetsApi.Repositories.Interfaces;
-using System.Drawing;
-using System.Runtime.CompilerServices;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace RouletteBetsApi.Services
 {

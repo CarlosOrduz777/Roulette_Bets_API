@@ -25,7 +25,7 @@ namespace RouletteBetsApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Roulette>> GetRouletteById(string id)
         {
-            string recordKey = "Roulette_" + DateTime.UtcNow.ToString();
+            string recordKey = $"Roulette_{DateTime.Now:yyyyMMdd_hhmm}";
             var roulette = await _cache.GetValueAsync<Roulette>(recordKey);
             if(roulette is null )
             {
@@ -56,7 +56,7 @@ namespace RouletteBetsApi.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Roulette>>> GetAll()
         {
-            string recordKey = "Roulettes_" + DateTime.UtcNow.ToString();
+            string recordKey = $"Roulettes_{DateTime.Now:yyyyMMdd_hhmm}";
             var roulettes = await _cache.GetValueAsync<List<Roulette>>(recordKey);
             if(roulettes == null)
             {

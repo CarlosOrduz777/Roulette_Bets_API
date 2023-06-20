@@ -234,3 +234,5 @@ _Pvt_Extensions
 .fake/
 # Database Configuration file
 appsettings.json
+
+aws-lambda-tools-defaults.json
