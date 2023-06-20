@@ -3,8 +3,8 @@
 # Resumen
 Este proyecto se trata de un juego de Ruleta, donde se exponen diferentes endpoints para poder ser consumidos. La aplicación tiene una arquitectura orientada a microservicios, se utiliza servicio de cache Azure Redis para mejorar la escalabilidad y rendimiento de la aplicación, se encuentra actualmente desplegada en AWS Lambda.
 
-### Endpoints Roulette
-* POST -> Crea una nueva Ruleta /v1/roulettes
+### Endpoints Roulette 
+* POST -> Crea una nueva Ruleta /v1/roulettes [Endpoint Protegido por JWT]
   * Ejemplo de uso
     ```
     {
@@ -12,16 +12,16 @@ Este proyecto se trata de un juego de Ruleta, donde se exponen diferentes endpoi
         "state": "OPEN"
     }
     ```
-* PATCH -> Cambia el estado de una Ruleta (CLOSE-OPEN) /v1/roulettes
+* PATCH -> Cambia el estado de una Ruleta (CLOSE-OPEN) /v1/roulettes [Endpoint Protegido por JWT]
   * Ejemplo de uso
     https://oim5y3xrfn7mez4yo4x3k5atxu0bbuol.lambda-url.us-east-1.on.aws/v1/roulettes/{id de ruleta}
-* GET -> Obtiene todas las ruletas existentes /v1/roulettes
-* GET{id} -> Retorna una ruleta dado un id /v1/roulettes
+* GET -> Obtiene todas las ruletas existentes /v1/roulettes [Endpoint abierto]
+* GET{id} -> Retorna una ruleta dado un id /v1/roulettes [Endpoint abierto]
   * Ejemplo de Uso
     https://oim5y3xrfn7mez4yo4x3k5atxu0bbuol.lambda-url.us-east-1.on.aws/v1/roulettes/{id de ruleta}
     https://oim5y3xrfn7mez4yo4x3k5atxu0bbuol.lambda-url.us-east-1.on.aws/v1/roulettes/648d1291c75700597a89ac03
 ### Endpoints Bet
-* POST -> Abre una nueva apuesta en una ruleta abierta /v1/bets
+* POST -> Abre una nueva apuesta en una ruleta abierta /v1/bets [Endpoint Protegido por JWT]
   * Ejemplo de Uso
     ```
     {
@@ -31,11 +31,11 @@ Este proyecto se trata de un juego de Ruleta, donde se exponen diferentes endpoi
       "rouletteId": "648d1291c75700597a89ac03" (Id de Ruleta que esté abierta)
     }
     ```
-* PUT -> Cierra todas las apuestas, cierra la ruleta, borra las apuestas hechas y retorna el estado final del juego en especifico.
+* PUT -> Cierra todas las apuestas, cierra la ruleta, borra las apuestas hechas y retorna el estado final del juego en especifico. [Endpoint Protegido por JWT]
   * Ejemplo de Uso
     https://oim5y3xrfn7mez4yo4x3k5atxu0bbuol.lambda-url.us-east-1.on.aws/v1/bets?rouletteId={Id de la ruleta}
 ### Endpoint User
-* POST -> Crea un nuevo usuario para el sistema /v1/users/signUp
+* POST -> Crea un nuevo usuario para el sistema /v1/users/signUp [Endpoint abierto]
   * Ejemplo de uso
     ```
      {
@@ -47,7 +47,7 @@ Este proyecto se trata de un juego de Ruleta, donde se exponen diferentes endpoi
     ```
   
 ### Endpoint Token Bearer
-* POST -> Crea y devuelve un token para poder Loguearse, dado un usuario específico
+* POST -> Crea y devuelve un token para poder Loguearse, dado un usuario específico [Endpoint abierto]
   * Ejemplo de Uso
     ```
     {
